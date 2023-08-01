@@ -1,9 +1,12 @@
 import random
 from deap import base, creator, tools
 import numpy as np
+from image_processing import generate_img, calculate_difference
+from PIL import Image
 
 POINT_COUNT = 100 
 POPULATION_SIZE = 50 
+target_img = Image.open('app/barbie_logo.jpg')
 
 # define the fitness 
 creator.create('FitnessMax', base.Fitness, weights=(1.0,))
@@ -21,8 +24,11 @@ toolbox.register('population', tools.initRepeat, list, toolbox.individual, n=POP
 population = toolbox.population()
 
 def evaluate(individual):
-    # evaluation function that sums the coordinates of the points
-    return (sum(np.array(individual)[:, 0]),)
+    # generate the individual's path
+    individual_img = generate_img(individual)
+    #  calculate diff between individual's img and target
+    score = calculate_difference(individual_img, target_img)
+    return (score,)
 
 def mutate(individual, indpb):
     # small random change to each point in the individual with a probability of indpb.
