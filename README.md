@@ -1,14 +1,18 @@
 # Genetic Algorithm for Generating "Barbie" text
 
-This project uses a genetic algorithm to generate points that form a representation of the word "Barbie" in a 2D space. 
+This repo uses a genetic algorithm which is a type of evolutionary computing technique to generate points that form a representation of the word "Barbie" in a 2D space.
+
+An evolutionary algorithm is a method inspired by biological evolution. The algorithm starts with a population of randomly generated "individuals". In the case of this current project, an individual is a set of points in a 2D space. The population evolves over time through a process of selection, crossover and mutation.
+
+The "fitness" of each individual (how close the representation of the word "Barbie" it forms) is measured using a scoring function. The individuals with the highest fitness have a higher chance of passing on their "genes" to the next generation.
+
+Over many generations, the population will evolve to produce better and better approximations of the word "Barbie".
 
 ## Project Structure
 
-This project is structured as follows:
-
 ```
-/barbie-genetic-algorithm
-    /src
+/barbie
+    /app
         /genetic_algorithm.py   # is main genetic algorithm.
         /scoring.py             # is scoring function.
         /visualization.py       # is visualization function.
@@ -17,23 +21,18 @@ This project is structured as follows:
 
 ## Setup
 
-You can set up and run this project as follows:
 
 1. Clone this repository to your local machine using `git clone https://github.com/nisrinekane/barbie.git`.
 
-2. (Optional) Create a virtual environment and activate it.
+2. (recommended) Create a virtual environment and activate it.
 
 3. Install the required dependencies using `pip install -r requirements.txt`.
 
-4. Run the main script using `python src/genetic_algorithm.py`.
+4. Run main script  `python src/genetic_algorithm.py`.
 
 ## Usage
 
-This project uses a simple genetic algorithm to evolve a population of individuals, where each individual is a list of 2D points. 
-
-The goal is to evolve this population over time such that it forms an image resembling the word "Barbie".
-
-To run the project, navigate to the root directory and execute the following command: `python src/genetic_algorithm.py`.
+To run the project navigate to the root directory and execute the following command: `python src/genetic_algorithm.py`.
 
 ## Customization
 
@@ -43,7 +42,7 @@ You can customize the behavior of the genetic algorithm by modifying the paramet
 - `POPULATION_SIZE`: The size of the population.
 - `NGEN`: The number of generations to run the genetic algorithm for.
 
-You can also customize the genetic operations by modifying the `evaluate`, `mutate`, and `mate` functions in `src/genetic_algorithm.py`. Note that you'll need to replace the `evaluate` function with a function that calculates how much an individual's shape resembles the word "Barbie".
+You can also customize the genetic operations by modifying the `evaluate`, `mutate`, and `mate` functions in `src/genetic_algorithm.py`. You'll need to replace the `evaluate` function with a function that calculates how much an individual's shape resembles the word "Barbie".
 
 ## Dependencies
 
