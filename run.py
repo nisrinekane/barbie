@@ -1,5 +1,7 @@
-from app.genetic_algorithm import evolve_population
+from app.genetic_algorithm import evolve_population, initialize_population
 from app.visualization import visualize
+
+GENERATIONS = 100
 
 def main():
     population = initialize_population()
