@@ -1,20 +1,24 @@
 from PIL import Image, ImageDraw
+from config import IMG_WIDTH, IMG_HEIGHT, POINT_COUNT
 
 def generate_img(individual):
-    img = Image.new('1', (100, 100))
-    draw = ImageDraw.Draw(img)
+    img = Image.new('RGB', (IMG_WIDTH, IMG_HEIGHT), "black") # this creates black canvas
+    pixels = img.load() 
 
-    for point in individual:
-        x = int(point[0] * 100)
-        y = int(point[1] * 100)
-        draw.point((x,y), fill='pink')
+    for i in range(img.width):
+        for j in range(img.height):
+            # xxtract color from individual
+            color = tuple(int(255 * individual[(i * img.width + j) % POINT_COUNT][k]) for k in range(3))
+            pixels[i, j] = color
 
-        return img
-
+    return img
 
 def calculate_difference(img1, img2):
     diff = 0
     for i in range(img1.width):
         for j in range(img1.height):
-            diff += abs(img1.getpixel((u, j)) - img2.getpixel((i, j)))
+            pixel1 = img1.getpixel((i, j))
+            pixel2 = img2.getpixel((i, j))
+            for k in range(3):  # for each rgb component
+                diff += abs(pixel1[k] - pixel2[k])
     return diff

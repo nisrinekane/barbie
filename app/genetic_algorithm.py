@@ -1,12 +1,15 @@
+import os
 import random
 from deap import base, creator, tools
 import numpy as np
 from image_processing import generate_img, calculate_difference
 from PIL import Image
+import matplotlib.pyplot as plt
+from config import POINT_COUNT, POPULATION_SIZE
 
-POINT_COUNT = 100 
-POPULATION_SIZE = 50 
-target_img = Image.open('app/barbie_logo.jpg')
+SAVE_DIR = "saved_images"
+os.makedirs(SAVE_DIR, exist_ok=True)
+target_img = Image.open('barbie_logo.jpg')
 
 # define the fitness 
 creator.create('FitnessMax', base.Fitness, weights=(1.0,))
@@ -15,7 +18,7 @@ creator.create('Individual', list, fitness=creator.FitnessMax)
 toolbox = base.Toolbox()
 
 # attribute generator
-toolbox.register('attr_point', lambda: (random.uniform(0, 1), random.uniform(0, 1)))
+toolbox.register('attr_point', lambda: (random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)))
 
 # structure initializers
 toolbox.register('individual', tools.initRepeat, creator.Individual, toolbox.attr_point, n=POINT_COUNT)
@@ -24,11 +27,10 @@ toolbox.register('population', tools.initRepeat, list, toolbox.individual, n=POP
 population = toolbox.population()
 
 def evaluate(individual):
-    # generate the individual's path
     individual_img = generate_img(individual)
-    #  calculate diff between individual's img and target
     score = calculate_difference(individual_img, target_img)
     return (score,)
+
 
 def mutate(individual, indpb):
     # small random change to each point in the individual with a probability of indpb.
@@ -48,11 +50,19 @@ toolbox.register("mate", mate)
 toolbox.register("mutate", mutate, indpb=0.05)
 toolbox.register("select", tools.selTournament, tournsize=3)
 
-# run main loop:
-NGEN = 100
+#  main loop:
+NGEN = 1000
 for gen in range(NGEN):
     # select and clone next generation individuals
     offspring = list(map(toolbox.clone, toolbox.select(population, len(population))))
+    # visualize best individual from current generation
+    best_ind = tools.selBest(population, 1)[0]
+    best_img = generate_img(best_ind)
+    # save only every 1000th image
+    if gen % 1000 == 0:
+        best_img.save(os.path.join(SAVE_DIR, f"gen_{gen}.png"))
+    # plt.imshow(best_img, cmap='gray')
+    # plt.show()
 
     # apply crossover 
     for child1, child2 in zip(offspring[::2], offspring[1::2]):
@@ -73,6 +83,6 @@ for gen in range(NGEN):
     # replace population
     population[:] = offspring
 
-    # print stats
+    # stats
     print(f"generation: {gen}")
 
