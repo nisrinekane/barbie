@@ -19,6 +19,7 @@ def calculate_difference(img1, img2):
         for j in range(img1.height):
             pixel1 = img1.getpixel((i, j))
             pixel2 = img2.getpixel((i, j))
-            for k in range(3):  # for each rgb component
-                diff += abs(pixel1[k] - pixel2[k])
+            for k in range(3):  # for each RGB component
+                diff += (pixel1[k] - pixel2[k]) ** 2  # square the difference
     return diff
+
