@@ -8,19 +8,7 @@ The "fitness" of each individual (how close the representation of the word "Barb
 
 Over many generations, the population will evolve to produce better and better approximations of the word "Barbie".
 
-## Project Structure
-
-```
-/barbie
-    /app
-        /genetic_algorithm.py   # is main genetic algorithm.
-        /scoring.py             # is scoring function.
-        /visualization.py       # is visualization function.
-    README.md                   # Project description
-```
-
 ## Setup
-
 
 1. Clone this repository to your local machine using `git clone https://github.com/nisrinekane/barbie.git`.
 
