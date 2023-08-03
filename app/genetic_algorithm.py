@@ -5,7 +5,7 @@ import numpy as np
 from image_processing import generate_img, calculate_difference
 from PIL import Image
 import matplotlib.pyplot as plt
-from config import POINT_COUNT, POPULATION_SIZE
+from config import POINT_COUNT, POPULATION_SIZE, ELITE_SIZE
 
 SAVE_DIR = "saved_images"
 os.makedirs(SAVE_DIR, exist_ok=True)
@@ -51,18 +51,43 @@ toolbox.register("mutate", mutate, indpb=0.05)
 toolbox.register("select", tools.selTournament, tournsize=3)
 
 #  main loop:
-NGEN = 1000
+NGEN = 10000
 for gen in range(NGEN):
     # select and clone next generation individuals
-    offspring = list(map(toolbox.clone, toolbox.select(population, len(population))))
+    offspring = toolbox.select(population, len(population) - ELITE_SIZE)
+    offspring = list(map(toolbox.clone, offspring))
+
+    # apply crossover 
+    for child1, child2 in zip(offspring[::2], offspring[1::2]):
+        toolbox.mate(child1, child2)
+        del child1.fitness.values, child2.fitness.values
+
+    # apply mutation
+    for mutant in offspring:
+        toolbox.mutate(mutant)
+        del mutant.fitness.values
+
+    # evaluate individuals:
+    invalids = [ind for ind in offspring if not ind.fitness.valid]
+    fitnesses = map(toolbox.evaluate, invalids)
+    for ind, fit in zip(invalids, fitnesses):
+        ind.fitness.values = fit
+
+    # Elitism: get the best individuals from the past generation
+    elite = sorted(population, key=lambda ind: ind.fitness.values, reverse=True)[:ELITE_SIZE]
+
+    # replace population with the offspring and elite
+    population[:] = offspring + elite
+
     # visualize best individual from current generation
     best_ind = tools.selBest(population, 1)[0]
     best_img = generate_img(best_ind)
-    # save only every 1000th image
-    if gen % 1000 == 0:
+    # save only every 500th image
+    if gen % 500 == 0:
         best_img.save(os.path.join(SAVE_DIR, f"gen_{gen}.png"))
-    # plt.imshow(best_img, cmap='gray')
-    # plt.show()
+
+    # print stats
+    print(f"generation: {gen}")
 
     # apply crossover 
     for child1, child2 in zip(offspring[::2], offspring[1::2]):
