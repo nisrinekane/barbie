@@ -1,6 +1,6 @@
 # Genetic Algorithm for Generating "Barbie" text
 
-This repo uses a genetic algorithm which is a type of evolutionary computing technique to generate points that form a representation of the word "Barbie" in a 2D space.
+This project uses a genetic algorithm which is a type of evolutionary computing technique to generate points that form a representation of the word "Barbie" in a 2D space.
 
 An evolutionary algorithm is a method inspired by biological evolution. The algorithm starts with a population of randomly generated "individuals". In the case of this current project, an individual is a set of points in a 2D space. The population evolves over time through a process of selection, crossover and mutation.
 
